@@ -8,7 +8,8 @@ output:
 
 ## Loading and preprocessing the data
 
-```{r setup, echo=TRUE}
+
+``` r
 knitr::opts_chunk$set(
   echo = TRUE,
   fig.path = "figure/"
@@ -16,7 +17,8 @@ knitr::opts_chunk$set(
 ```
 
 
-```{r, echo=TRUE}
+
+``` r
 activity <- read.csv(
   "activity.csv",
   header = TRUE,
@@ -26,10 +28,21 @@ activity <- read.csv(
 head(activity)
 ```
 
+```
+##   steps       date interval
+## 1    NA 2012-10-01        0
+## 2    NA 2012-10-01        5
+## 3    NA 2012-10-01       10
+## 4    NA 2012-10-01       15
+## 5    NA 2012-10-01       20
+## 6    NA 2012-10-01       25
+```
+
 
 
 ## What is mean total number of steps taken per day?
-```{r, echo=TRUE}
+
+``` r
 daily_steps <- aggregate(
   steps ~ date,
   data = activity,
@@ -41,8 +54,19 @@ daily_steps <- aggregate(
 head(daily_steps)
 ```
 
+```
+##         date steps
+## 1 2012-10-02   126
+## 2 2012-10-03 11352
+## 3 2012-10-04 12116
+## 4 2012-10-05 13294
+## 5 2012-10-06 15420
+## 6 2012-10-07 11015
+```
 
-```{r, echo=TRUE}
+
+
+``` r
 hist(
   daily_steps$steps,
   breaks = 20,
@@ -53,13 +77,28 @@ hist(
 )
 ```
 
-```{r, echo=TRUE}
+![](figure/unnamed-chunk-3-1.png)<!-- -->
+
+
+``` r
 mean(daily_steps$steps)
+```
+
+```
+## [1] 10766.19
+```
+
+``` r
 median(daily_steps$steps)
 ```
 
+```
+## [1] 10765
+```
+
 ## What is the average daily activity pattern?
-```{r, echo=TRUE}
+
+``` r
 interval_means <- aggregate(
   steps ~ interval,
   data = activity,
@@ -69,8 +108,19 @@ interval_means <- aggregate(
 head(interval_means)
 ```
 
+```
+##   interval     steps
+## 1        0 1.7169811
+## 2        5 0.3396226
+## 3       10 0.1320755
+## 4       15 0.1509434
+## 5       20 0.0754717
+## 6       25 2.0943396
+```
 
-```{r, echo=TRUE}
+
+
+``` r
 interval_steps <- aggregate(
   steps ~ interval,
   data = activity,
@@ -87,25 +137,39 @@ ylab = "Average number of steps"
 )
 ```
 
+![](figure/unnamed-chunk-6-1.png)<!-- -->
 
 
 
 
-```{r, echo=TRUE}
+
+
+``` r
 interval_steps[which.max(interval_steps$steps), ]
+```
+
+```
+##     interval    steps
+## 104      835 206.1698
 ```
 
 
 
 ## Imputing missing values
-```{r, echo=TRUE}
+
+``` r
 missing_values <- sum(is.na(activity$steps))
 
 
 missing_values
 ```
 
-```{r, echo=TRUE}
+```
+## [1] 2304
+```
+
+
+``` r
 interval_means <- aggregate(
   steps ~ interval,
   data = activity,
@@ -117,8 +181,19 @@ interval_means <- aggregate(
 head(interval_means)
 ```
 
+```
+##   interval     steps
+## 1        0 1.7169811
+## 2        5 0.3396226
+## 3       10 0.1320755
+## 4       15 0.1509434
+## 5       20 0.0754717
+## 6       25 2.0943396
+```
 
-```{r, echo=TRUE}
+
+
+``` r
 activity_imputed <- merge(
   activity,
   interval_means,
@@ -127,7 +202,8 @@ activity_imputed <- merge(
 )
 ```
 
-```{r, echo=TRUE}
+
+``` r
 missing <- is.na(activity_imputed$steps)
 activity_imputed$steps[missing] <-
 activity_imputed$interval_mean[missing]
@@ -135,18 +211,40 @@ activity_imputed$interval_mean <- NULL
 ```
 
 
-```{r}
+
+``` r
 sum(is.na(activity_imputed$steps))
 ```
-```{r}
+
+```
+## [1] 0
+```
+
+``` r
 head(activity_imputed)
 ```
 
-```{r}
+```
+##   interval steps.x       date  steps.y
+## 1        0      NA 2012-10-01 1.716981
+## 2        0       0 2012-11-23 1.716981
+## 3        0       0 2012-10-28 1.716981
+## 4        0       0 2012-11-06 1.716981
+## 5        0       0 2012-11-24 1.716981
+## 6        0       0 2012-11-15 1.716981
+```
+
+
+``` r
 names(activity_imputed)
 ```
 
-```{r, echo=TRUE}
+```
+## [1] "interval" "steps.x"  "date"     "steps.y"
+```
+
+
+``` r
 daily_steps_imputed <- aggregate(
   steps ~ date,
   data = activity,
@@ -156,9 +254,20 @@ daily_steps_imputed <- aggregate(
 head(daily_steps_imputed)
 ```
 
+```
+##         date steps
+## 1 2012-10-02   126
+## 2 2012-10-03 11352
+## 3 2012-10-04 12116
+## 4 2012-10-05 13294
+## 5 2012-10-06 15420
+## 6 2012-10-07 11015
+```
 
 
-```{r}
+
+
+``` r
 interval_means <- aggregate(
   steps ~ interval,
   data = activity,
@@ -167,11 +276,17 @@ interval_means <- aggregate(
 )
 ```
 
-```{r, echo=TRUE}
+
+``` r
 missing_values <- sum(is.na(activity$steps))
 missing_values
 ```
-```{r, echo=TRUE}
+
+```
+## [1] 2304
+```
+
+``` r
 interval_means <- aggregate(
   steps ~ interval,
   data = activity,
@@ -181,7 +296,18 @@ interval_means <- aggregate(
 
 head(interval_means)
 ```
-```{r, echo=TRUE}
+
+```
+##   interval     steps
+## 1        0 1.7169811
+## 2        5 0.3396226
+## 3       10 0.1320755
+## 4       15 0.1509434
+## 5       20 0.0754717
+## 6       25 2.0943396
+```
+
+``` r
 activity_imputed <- merge(
   activity,
   interval_means,
@@ -191,7 +317,18 @@ activity_imputed <- merge(
 
 head(activity_imputed)
 ```
-```{r, echo=TRUE}
+
+```
+##   interval steps.x       date  steps.y
+## 1        0      NA 2012-10-01 1.716981
+## 2        0       0 2012-11-23 1.716981
+## 3        0       0 2012-10-28 1.716981
+## 4        0       0 2012-11-06 1.716981
+## 5        0       0 2012-11-24 1.716981
+## 6        0       0 2012-11-15 1.716981
+```
+
+``` r
 missing <- is.na(activity_imputed$steps)
 ```
 activity_imputed$steps[missing] <-
@@ -199,16 +336,27 @@ activity_imputed$steps[missing] <-
 
 activity_imputed$interval_mean <- NULL
 
-```{r}
+
+``` r
 sum(is.na(activity_imputed$steps))
 ```
-```{r, echo=TRUE}
+
+```
+## [1] 0
+```
+
+``` r
 names(activity)
+```
+
+```
+## [1] "steps"    "date"     "interval"
 ```
 head(daily_steps_imputed)
 
 
-```{r, echo=TRUE}
+
+``` r
 interval_means <- aggregate(
   steps ~ interval,
   data = activity,
@@ -219,8 +367,19 @@ interval_means <- aggregate(
 head(interval_means)
 ```
 
+```
+##   interval     steps
+## 1        0 1.7169811
+## 2        5 0.3396226
+## 3       10 0.1320755
+## 4       15 0.1509434
+## 5       20 0.0754717
+## 6       25 2.0943396
+```
 
-```{r}
+
+
+``` r
 activity_imputed <- merge(
   activity,
   interval_means,
@@ -231,22 +390,40 @@ activity_imputed <- merge(
 head(activity_imputed)
 ```
 
-```{r, echo=TRUE}
+```
+##   interval steps.x       date  steps.y
+## 1        0      NA 2012-10-01 1.716981
+## 2        0       0 2012-11-23 1.716981
+## 3        0       0 2012-10-28 1.716981
+## 4        0       0 2012-11-06 1.716981
+## 5        0       0 2012-11-24 1.716981
+## 6        0       0 2012-11-15 1.716981
+```
+
+
+``` r
 activity_imputed$steps.x[is.na(activity_imputed$steps.x)] <-
   activity_imputed$steps.y[is.na(activity_imputed$steps.x)]
 ```
 
 
-```{r, echo=TRUE}
+
+``` r
 activity_imputed$steps <- activity_imputed$steps.x
 ```
 activity_imputed$steps.x <- NULL
 activity_imputed$steps.y <- NULL
 
-```{r, echo=TRUE}
+
+``` r
 sum(is.na(activity_imputed$steps))
 ```
-```{r, echo=TRUE}
+
+```
+## [1] 0
+```
+
+``` r
 daily_steps_imputed <- aggregate(
   steps ~ date,
   data = activity_imputed,
@@ -255,7 +432,18 @@ daily_steps_imputed <- aggregate(
 head(daily_steps_imputed)
 ```
 
-```{r, echo=TRUE}
+```
+##         date    steps
+## 1 2012-10-01 10766.19
+## 2 2012-10-02   126.00
+## 3 2012-10-03 11352.00
+## 4 2012-10-04 12116.00
+## 5 2012-10-05 13294.00
+## 6 2012-10-06 15420.00
+```
+
+
+``` r
 hist(
   daily_steps_imputed$steps,
   breaks = 20,
@@ -266,14 +454,29 @@ hist(
 )
 ```
 
-```{r, echo=TRUE}
+![](figure/unnamed-chunk-29-1.png)<!-- -->
+
+
+``` r
 mean(daily_steps_imputed$steps)
+```
+
+```
+## [1] 10766.19
+```
+
+``` r
 median(daily_steps_imputed$steps)
+```
+
+```
+## [1] 10766.19
 ```
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
-```{r, echo=TRUE}
+
+``` r
 activity_imputed$day_type <- ifelse(
   weekdays(as.Date(activity_imputed$date)) %in%
     c("Saturday", "Sunday"),
@@ -286,7 +489,18 @@ levels = c("weekday", "weekend")
 )
 head(activity_imputed)
 ```
-```{r, echo=TRUE}
+
+```
+##   interval  steps.x       date  steps.y    steps day_type
+## 1        0 1.716981 2012-10-01 1.716981 1.716981  weekday
+## 2        0 0.000000 2012-11-23 1.716981 0.000000  weekday
+## 3        0 0.000000 2012-10-28 1.716981 0.000000  weekend
+## 4        0 0.000000 2012-11-06 1.716981 0.000000  weekday
+## 5        0 0.000000 2012-11-24 1.716981 0.000000  weekend
+## 6        0 0.000000 2012-11-15 1.716981 0.000000  weekday
+```
+
+``` r
 weekday_weekend <- aggregate(
   steps ~ interval + day_type,
   data = activity_imputed,
@@ -294,7 +508,18 @@ weekday_weekend <- aggregate(
 )
 head(weekday_weekend)
 ```
-```{r, echo=TRUE}
+
+```
+##   interval day_type      steps
+## 1        0  weekday 2.25115304
+## 2        5  weekday 0.44528302
+## 3       10  weekday 0.17316562
+## 4       15  weekday 0.19790356
+## 5       20  weekday 0.09895178
+## 6       25  weekday 1.59035639
+```
+
+``` r
 library(lattice)
 xyplot(
 steps ~ interval | day_type,
@@ -306,7 +531,10 @@ ylab = "Average number of steps",
 main = "Average Activity Pattern: Weekdays vs Weekends"
 )
 ```
-```{r, echo=TRUE}
+
+![](figure/unnamed-chunk-33-1.png)<!-- -->
+
+``` r
 data.frame(
   Measure = c("Mean", "Median"),
   Before_Imputation = c(
@@ -318,5 +546,11 @@ data.frame(
     median(daily_steps_imputed$steps)
   )
 )
+```
+
+```
+##   Measure Before_Imputation After_Imputation
+## 1    Mean          10766.19         10766.19
+## 2  Median          10765.00         10766.19
 ```
 
